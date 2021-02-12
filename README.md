@@ -1,6 +1,6 @@
 # demo-webhooks
 
-Example showing how to connect your NLP models to [tagtog](https://www.tagtog.net). We will use [Flask](https://flask.palletsprojects.com/), [spaCy](https://spacy.io), [tagtog webhooks](https://docs.tagtog.net/projects.html#webhooks) and [tagtog API](https://docs.tagtog.net/API_documents_v1.html). 
+Example showing how to connect your NLP models to [tagtog](https://www.tagtog.net). We will use Python, [Flask](https://flask.palletsprojects.com/), [spaCy](https://spacy.io), [tagtog webhooks](https://docs.tagtog.net/projects.html#webhooks) and [tagtog API](https://docs.tagtog.net/API_documents_v1.html). 
 
 An introduction to webhooks and the full step-by-step guide is here: https://tagtog.medium.com/connect-your-nlp-models-to-tagtog-using-webhooks-13d422ae4dff
 
