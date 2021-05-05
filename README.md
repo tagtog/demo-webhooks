@@ -12,7 +12,7 @@ With this repo, you will learn how to setup a tagtog webhook and how to manage a
 
 ## Setup and running
 1. Create a virtual environment
-```
+```shell
 # Create the virtual environment myenv
 # Python 3.3+
 $ python3 -m venv myenv
