@@ -28,19 +28,25 @@ $ pip install -r requirements.txt
 ```
 python3 -m spacy download en_core_web_sm
 ```
-4. Run the app
+4. Setup the environment variable
+```
+export MY_TAGTOG_USERNAME='your_username'
+export MY_TAGTOG_PASSWORD='your_password'
+export MY_TAGTOG_PROJECT='project_name'
+```
+5. Run the app
 ```
 $ python3 app.py
 ```
-5. Make your app reachable from the outside using [ngrok](https://ngrok.com/)
+6. Make your app reachable from the outside using [ngrok](https://ngrok.com/)
 ```
 $ ./ngrok http 5000
 ```
-6. Create a project at [tagtog.net](https://www.tagtog.net)
-7. Go to your project and create three entity types at Settings > Entity Types: `PERSON`, `ORG` and `MONEY`
-8. Add a webhook to your project at Settings > Webhooks:
+7. Create a project at [tagtog.net](https://www.tagtog.net)
+8. Go to your project and create three entity types at Settings > Entity Types: `PERSON`, `ORG` and `MONEY`
+9. Add a webhook to your project at Settings > Webhooks:
   * Endpoint: Use the endpoint given by ngrok (e.g. http://1cbc12c59c8d.ngrok.io)
   * Payload: Choose the payload `tagtogID`
   * Check the flag to `Trigger only if change originates in the GUI`
   * Authentication: we won't use any authentication mechanism for this example, therefore we choose none.
-9. Upload a document to your tagtog project (e.g. "Paypal Holdings Inc (PYPL) President and CEO Daniel Schulman Sold $2.7 million of Shares"). 🪄 The document is automatically annotated by our spaCy model.
+10. Upload a document to your tagtog project (e.g. "Paypal Holdings Inc (PYPL) President and CEO Daniel Schulman Sold $2.7 million of Shares"). 🪄 The document is automatically annotated by our spaCy model.
