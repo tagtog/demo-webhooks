@@ -32,7 +32,7 @@ pip install -r requirements.txt
 python3 -m spacy download en_core_web_sm
 ```
 
-4. Setup the environment variable
+4. Setup the environment variables
 ```shell
 export MY_TAGTOG_USERNAME='your_username'
 export MY_TAGTOG_PASSWORD='your_password'
