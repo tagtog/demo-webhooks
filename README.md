@@ -54,15 +54,17 @@ flask run --port 5005
 ngrok http 5005
 ```
 
-8. Go to your tagtog project and create three entity types at Settings > Entity Types: `PERSON`, `ORG`, and `MONEY`
+8. Go to your tagtog project and create three entity types at Settings > Entity Types:
+  1. `PERSON`
+  2. `ORG`
+  3. `MONEY`
 
 9. Add a webhook to your project at Settings > Webhooks:
-  * Endpoint: Use the endpoint given by ngrok (e.g. https://d6a6da136156.ngrok.io)
-  * Payload: Choose the payload `tagtogID`
-  * Check the flag to `Trigger only if change originates in the GUI`
-  * Authentication: we won't use any authentication mechanism for this example, therefore we choose `none`.
+    * Endpoint: Use the endpoint given by ngrok (e.g. https://d6a6da136156.ngrok.io)
+    * Payload: Choose the payload `tagtogID`
+    * Check the flag to `Trigger only if change originates in the GUI`
+    * Authentication: we won't use any authentication mechanism for this example, therefore we choose `none`.
 
 10. Upload a document to your tagtog project 🪄 it will be automatically annotated by our spaCy model!
-
     Example document text:
     > Paypal Holdings Inc (PYPL) President and CEO Daniel Schulman Sold $2.7 million of Shares.
