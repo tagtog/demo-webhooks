@@ -6,6 +6,36 @@ import os
 import sys
 from bs4 import BeautifulSoup
 
+# -----------------------------------------------------------------------------
+
+# Set your credentials at tagtog
+MY_USERNAME = os.environ['MY_TAGTOG_USERNAME']
+MY_PASSWORD = os.environ['MY_TAGTOG_PASSWORD']
+MY_PROJECT = os.environ['MY_TAGTOG_PROJECT']
+
+# -----------------------------------------------------------------------------
+
+# API authentication
+tagtog_API_endpoint = "https://www.tagtog.net/-api/documents/v1"
+auth = requests.auth.HTTPBasicAuth(username=MY_USERNAME, password=MY_PASSWORD)
+
+# Parameters for the GET API call to get a document
+# (see https://docs.tagtog.net/API_documents_v1.html#examples-get-the-original-document-by-document-id)
+get_params_doc = {'owner': MY_USERNAME, 'project': MY_PROJECT, 'output': 'plain.html'}
+# Parameters for the POST API call to import a pre-annotated document
+# (see https://docs.tagtog.net/API_documents_v1.html#examples-import-pre-annotated-plain-text-file)
+post_params_doc = {'owner': MY_USERNAME, 'project': MY_PROJECT, 'output': 'null', 'format': 'anndoc'}
+
+# -----------------------------------------------------------------------------
+
+# Load the spaCy trained pipeline (https://spacy.io/models/en#en_core_web_sm)
+pipeline = 'en_core_web_sm'
+nlp = spacy.load(pipeline)
+
+app = Flask(__name__)
+# Handle any POST request coming to the app root path
+
+# -----------------------------------------------------------------------------
 
 def get_class_id(label):
   """Translates the spaCy label id into the tagtog entity type id"""
@@ -52,29 +82,11 @@ def gen_generator_over_plain_html_parts(plain_html_filename):
     for partElem in plain_html_soup.body.find_all(_has_part_id):
       yield partElem
 
+# -----------------------------------------------------------------------------
 
-# Set your credentials at tagtog
-MY_USERNAME = os.environ['MY_TAGTOG_USERNAME']
-MY_PASSWORD = os.environ['MY_TAGTOG_PASSWORD']
-MY_PROJECT = os.environ['MY_TAGTOG_PROJECT']
-
-# API authentication
-tagtog_API_endpoint = "https://www.tagtog.net/-api/documents/v1"
-auth = requests.auth.HTTPBasicAuth(username=MY_USERNAME, password=MY_PASSWORD)
-
-# Parameters for the GET API call to get a document
-# (see https://docs.tagtog.net/API_documents_v1.html#examples-get-the-original-document-by-document-id)
-get_params_doc = {'owner': MY_USERNAME, 'project': MY_PROJECT, 'output': 'plain.html'}
-# Parameters for the POST API call to import a pre-annotated document
-# (see https://docs.tagtog.net/API_documents_v1.html#examples-import-pre-annotated-plain-text-file)
-post_params_doc = {'owner': MY_USERNAME, 'project': MY_PROJECT, 'output': 'null', 'format': 'anndoc'}
-
-# Load the spaCy trained pipeline (https://spacy.io/models/en#en_core_web_sm)
-pipeline = 'en_core_web_sm'
-nlp = spacy.load(pipeline)
-
-app = Flask(__name__)
-# Handle any POST request coming to the app root path
+@app.route('/', methods=['GET'])
+def ping():
+  return "Yes, I'm here!"
 
 
 @app.route('/', methods=['POST'])
@@ -105,7 +117,7 @@ def respond():
       partId = part.get("id")
       text = part.text
 
-      # appling the spaCy model to text
+      # apply the spaCy model to text
       doc = nlp(text)
 
       # Transform the spaCy entities into tagtog entities
