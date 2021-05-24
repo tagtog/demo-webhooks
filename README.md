@@ -11,10 +11,11 @@ With this repo, you will learn how to setup a tagtog webhook and how to manage a
 3. To push the annotated document back to tagtog
 
 ## Setup and running
+
 1. Create a virtual environment
 ```shell
 # Create the virtual environment (.venv)
-# Python 3.3+
+# Python ^3.6
 python3 -m venv .venv
 
 # Activate the virtualenv (macOS & Linux)
@@ -22,29 +23,32 @@ source .venv/bin/activate
 ```
 
 2. Install the dependencies
-```
+```shell
 pip install -r requirements.txt
 ```
 
 3. Download the spaCy model
-```
+```shell
 python3 -m spacy download en_core_web_sm
 ```
 
 4. Setup the environment variable
-```
+```shell
 export MY_TAGTOG_USERNAME='your_username'
 export MY_TAGTOG_PASSWORD='your_password'
 export MY_TAGTOG_PROJECT='project_name'
 ```
 
 5. Run the app
-```
-python3 app.py
+```shell
+export FLASK_APP=app.py
+export FLASK_ENV=development  # this enables live reloading
+flask run
 ```
 
 6. Make your app reachable from the outside using [ngrok](https://ngrok.com/)
-```
+```shell
+# on macOS: brew install ngrok
 ./ngrok http 5000
 ```
 
