@@ -74,13 +74,17 @@ def _has_part_id(elem):
   return elem.has_attr("id")
 
 
-def gen_generator_over_plain_html_parts(plain_html_filename):
+def gen_parts_generator_over_plain_html_file(plain_html_filename):
   with open(plain_html_filename, "r") as f:
     plain_html_raw = f.read()
-    plain_html_soup = BeautifulSoup(plain_html_raw, "html.parser")
+    return gen_parts_generator_over_plain_html(plain_html_raw)
 
-    for partElem in plain_html_soup.body.find_all(_has_part_id):
-      yield partElem
+
+def gen_parts_generator_over_plain_html(plain_html_raw):
+  plain_html_soup = BeautifulSoup(plain_html_raw, "html.parser")
+
+  for partElem in plain_html_soup.body.find_all(_has_part_id):
+    yield partElem
 
 # -----------------------------------------------------------------------------
 
@@ -92,17 +96,14 @@ def ping():
 @app.route('/', methods=['POST'])
 def respond():
   print(request.json)
-  if request.json['tagtogID']:
+  docid = request.json.get('tagtogID')
+
+  if docid:
     # Add the doc ID to the parameters
-    get_params_doc['ids'] = request.json['tagtogID']
-    print(request.json['tagtogID'])
-    get_response = requests.get(
-        tagtog_API_endpoint, params=get_params_doc, auth=auth)
+    get_params_doc['ids'] = docid
 
-    with open('my_document.html', 'wb') as f:
-      f.write(get_response.content)
-
-    plain_html_filename = 'my_document.html'
+    get_response = requests.get(tagtog_API_endpoint, params=get_params_doc, auth=auth)
+    doc_plain_html = get_response.content
 
     # Initialize ann.json (specification: https://docs.tagtog.net/anndoc.html#ann-json)
     annjson = {}
@@ -113,18 +114,18 @@ def respond():
     # Transform the spaCy entities into tagtog entities
     annjson['entities'] = []
 
-    for part in gen_generator_over_plain_html_parts(plain_html_filename):
-      partId = part.get("id")
+    for part in gen_parts_generator_over_plain_html(doc_plain_html):
+      partId = part.get('id')
       text = part.text
 
-      # apply the spaCy model to text
+      # apply the spaCy model to the text
       doc = nlp(text)
 
       # Transform the spaCy entities into tagtog entities
       annjson['entities'] += get_entities(doc.ents, pipeline, partId)
 
     # Pre-annotated document composed of the content and the annotations
-    files = [('my_document.html', get_response.content), ('my_document.ann.json', json.dumps(annjson))]
+    files = [(docid + '.plain.html', doc_plain_html), (docid + '.ann.json', json.dumps(annjson))]
 
     post_response = requests.post(tagtog_API_endpoint, params=post_params_doc, auth=auth, files=files)
     print(post_response.text)
