@@ -55,10 +55,9 @@ ngrok http 5005
 ```
 
 8. Go to your tagtog project and create three entity types at Settings > Entity Types:
-
-  1. `PERSON`
-  2. `ORG`
-  3. `MONEY`
+    1. `PERSON`
+    2. `ORG`
+    3. `MONEY`
 
 9. Add a webhook to your project at Settings > Webhooks:
     * Endpoint: Use the endpoint given by ngrok (e.g. https://d6a6da136156.ngrok.io)
