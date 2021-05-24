@@ -32,31 +32,36 @@ pip install -r requirements.txt
 python3 -m spacy download en_core_web_sm
 ```
 
-4. Setup the environment variables
+4. Create a project at [tagtog.net](https://www.tagtog.net)
+
+5. Setup the environment variables
 ```shell
 export MY_TAGTOG_USERNAME='your_username'
 export MY_TAGTOG_PASSWORD='your_password'
 export MY_TAGTOG_PROJECT='project_name'
 ```
 
-5. Run the app
+6. Run the app
 ```shell
 export FLASK_APP=app.py
 export FLASK_ENV=development  # this enables live reloading
-flask run
+flask run --port 5005
 ```
 
-6. Make your app reachable from the outside using [ngrok](https://ngrok.com/)
+7. In another console, make your app reachable from the outside using [ngrok](https://ngrok.com/)
 ```shell
 # on macOS: brew install ngrok
-./ngrok http 5000
+ngrok http 5005
 ```
 
-7. Create a project at [tagtog.net](https://www.tagtog.net)
-8. Go to your project and create three entity types at Settings > Entity Types: `PERSON`, `ORG` and `MONEY`
+8. Go to your tagtog project and create three entity types at Settings > Entity Types: `PERSON`, `ORG`, and `MONEY`
+
 9. Add a webhook to your project at Settings > Webhooks:
-  * Endpoint: Use the endpoint given by ngrok (e.g. http://1cbc12c59c8d.ngrok.io)
+  * Endpoint: Use the endpoint given by ngrok (e.g. https://d6a6da136156.ngrok.io)
   * Payload: Choose the payload `tagtogID`
   * Check the flag to `Trigger only if change originates in the GUI`
-  * Authentication: we won't use any authentication mechanism for this example, therefore we choose none.
-10. Upload a document to your tagtog project (e.g. "Paypal Holdings Inc (PYPL) President and CEO Daniel Schulman Sold $2.7 million of Shares"). 🪄 The document is automatically annotated by our spaCy model.
+  * Authentication: we won't use any authentication mechanism for this example, therefore we choose `none`.
+
+10. Upload a document to your tagtog project -- 🪄 it will be automatically annotated by our spaCy model!
+
+> Paypal Holdings Inc (PYPL) President and CEO Daniel Schulman Sold $2.7 million of Shares.
