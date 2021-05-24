@@ -56,7 +56,8 @@ def get_entities(spans, pipeline, partId):
   for span in spans:
     class_id = get_class_id(span.label_)
     if class_id is not None:
-      tagtog_entities.append({  # entity type id
+      tagtog_entities.append({
+          # entity type id
           'classId': class_id,
           'part': default_part_id,
           # entity offset
