@@ -55,6 +55,7 @@ ngrok http 5005
 ```
 
 8. Go to your tagtog project and create three entity types at Settings > Entity Types:
+
   1. `PERSON`
   2. `ORG`
   3. `MONEY`
@@ -66,5 +67,6 @@ ngrok http 5005
     * Authentication: we won't use any authentication mechanism for this example, therefore we choose `none`.
 
 10. Upload a document to your tagtog project 🪄 it will be automatically annotated by our spaCy model!
+
     Example document text:
     > Paypal Holdings Inc (PYPL) President and CEO Daniel Schulman Sold $2.7 million of Shares.
