@@ -1,6 +1,6 @@
 # demo-webhooks
 
-Example showing how to connect your NLP models to [tagtog](https://www.tagtog.net). We will use Python, [Flask](https://flask.palletsprojects.com/), [spaCy](https://spacy.io), [tagtog webhooks](https://docs.tagtog.net/projects.html#webhooks) and [tagtog API](https://docs.tagtog.net/API_documents_v1.html). 
+Example showing how to connect your NLP models to [tagtog](https://www.tagtog.net). We will use Python, [Flask](https://flask.palletsprojects.com/), [spaCy](https://spacy.io), [tagtog webhooks](https://docs.tagtog.net/projects.html#webhooks) and [tagtog API](https://docs.tagtog.net/API_documents_v1.html).
 
 An introduction to webhooks and the full step-by-step guide is here: https://tagtog.medium.com/connect-your-nlp-models-to-tagtog-using-webhooks-13d422ae4dff
 
@@ -13,35 +13,41 @@ With this repo, you will learn how to setup a tagtog webhook and how to manage a
 ## Setup and running
 1. Create a virtual environment
 ```shell
-# Create the virtual environment myenv
+# Create the virtual environment (.venv)
 # Python 3.3+
-$ python3 -m venv myenv
+python3 -m venv .venv
 
-# Activate the virtualenv (OS X & Linux)
-$ source myenv/bin/activate
+# Activate the virtualenv (macOS & Linux)
+source .venv/bin/activate
 ```
+
 2. Install the dependencies
 ```
-$ pip install -r requirements.txt
+pip install -r requirements.txt
 ```
+
 3. Download the spaCy model
 ```
 python3 -m spacy download en_core_web_sm
 ```
+
 4. Setup the environment variable
 ```
 export MY_TAGTOG_USERNAME='your_username'
 export MY_TAGTOG_PASSWORD='your_password'
 export MY_TAGTOG_PROJECT='project_name'
 ```
+
 5. Run the app
 ```
-$ python3 app.py
+python3 app.py
 ```
+
 6. Make your app reachable from the outside using [ngrok](https://ngrok.com/)
 ```
-$ ./ngrok http 5000
+./ngrok http 5000
 ```
+
 7. Create a project at [tagtog.net](https://www.tagtog.net)
 8. Go to your project and create three entity types at Settings > Entity Types: `PERSON`, `ORG` and `MONEY`
 9. Add a webhook to your project at Settings > Webhooks:
