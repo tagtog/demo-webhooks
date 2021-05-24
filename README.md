@@ -1,6 +1,6 @@
 # demo-webhooks
 
-Example showing how to connect your NLP models to [tagtog](https://www.tagtog.net). We will use Python, [Flask](https://flask.palletsprojects.com/), [spaCy](https://spacy.io), [tagtog webhooks](https://docs.tagtog.net/projects.html#webhooks) and [tagtog API](https://docs.tagtog.net/API_documents_v1.html). 
+Example showing how to connect your NLP models to [tagtog](https://www.tagtog.net). We will use Python, [Flask](https://flask.palletsprojects.com/), [spaCy](https://spacy.io), [tagtog webhooks](https://docs.tagtog.net/projects.html#webhooks) and [tagtog API](https://docs.tagtog.net/API_documents_v1.html).
 
 An introduction to webhooks and the full step-by-step guide is here: https://tagtog.medium.com/connect-your-nlp-models-to-tagtog-using-webhooks-13d422ae4dff
 
@@ -11,36 +11,61 @@ With this repo, you will learn how to setup a tagtog webhook and how to manage a
 3. To push the annotated document back to tagtog
 
 ## Setup and running
+
 1. Create a virtual environment
 ```shell
-# Create the virtual environment myenv
-# Python 3.3+
-$ python3 -m venv myenv
+# Create the virtual environment (.venv)
+# Python ^3.6
+python3 -m venv .venv
 
-# Activate the virtualenv (OS X & Linux)
-$ source myenv/bin/activate
+# Activate the virtualenv (macOS & Linux)
+source .venv/bin/activate
 ```
+
 2. Install the dependencies
+```shell
+pip install -r requirements.txt
 ```
-$ pip install -r requirements.txt
-```
+
 3. Download the spaCy model
-```
+```shell
 python3 -m spacy download en_core_web_sm
 ```
-4. Run the app
+
+4. Create a project at [tagtog.net](https://www.tagtog.net)
+
+5. Setup the environment variables
+```shell
+export MY_TAGTOG_USERNAME='your_username'
+export MY_TAGTOG_PASSWORD='your_password'
+export MY_TAGTOG_PROJECT='project_name'
 ```
-$ python3 app.py
+
+6. Run the app
+```shell
+export FLASK_APP=app.py
+export FLASK_ENV=development  # this enables live reloading
+flask run --port 5005
 ```
-5. Make your app reachable from the outside using [ngrok](https://ngrok.com/)
+
+7. In another console, make your app reachable from the outside using [ngrok](https://ngrok.com/)
+```shell
+# on macOS: brew install ngrok
+ngrok http 5005
 ```
-$ ./ngrok http 5000
-```
-6. Create a project at [tagtog.net](https://www.tagtog.net)
-7. Go to your project and create three entity types at Settings > Entity Types: `PERSON`, `ORG` and `MONEY`
-8. Add a webhook to your project at Settings > Webhooks:
-  * Endpoint: Use the endpoint given by ngrok (e.g. http://1cbc12c59c8d.ngrok.io)
-  * Payload: Choose the payload `tagtogID`
-  * Check the flag to `Trigger only if change originates in the GUI`
-  * Authentication: we won't use any authentication mechanism for this example, therefore we choose none.
-9. Upload a document to your tagtog project (e.g. "Paypal Holdings Inc (PYPL) President and CEO Daniel Schulman Sold $2.7 million of Shares"). 🪄 The document is automatically annotated by our spaCy model.
+
+8. Go to your tagtog project and create three entity types at Settings > Entity Types:
+    1. `PERSON`
+    2. `ORG`
+    3. `MONEY`
+
+9. Add a webhook to your project at Settings > Webhooks:
+    * Endpoint: Use the endpoint given by ngrok (e.g. https://d6a6da136156.ngrok.io)
+    * Payload: Choose the payload `tagtogID`
+    * Check the flag to `Trigger only if change originates in the GUI`
+    * Authentication: we won't use any authentication mechanism for this example, therefore we choose `none`.
+
+10. Upload a document to your tagtog project 🪄 it will be automatically annotated by our spaCy model!
+
+    Example document text:
+    > Paypal Holdings Inc (PYPL) President and CEO Daniel Schulman Sold $2.7 million of Shares.
