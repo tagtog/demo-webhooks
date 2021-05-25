@@ -38,7 +38,7 @@ python3 -m spacy download en_core_web_sm
     1. `PERSON`
     2. `ORG`
     3. `MONEY`
-    4. (OPTIONALLY) you can add more, as many (and with the exact names) as supported and listed in [en_core_web_sm > "Label Scheme" > NER](https://spacy.io/models/en#en_core_web_sm-labels) (e.g. `DATE` or `LANGUAGE`).
+    4. (OPTIONALLY) you can add more, as many (and with the exact names) as supported and listed in [en_core_web_sm > Label Scheme > NER](https://spacy.io/models/en#en_core_web_sm-labels) (e.g. `DATE` or `LANGUAGE`).
 
 6. Setup the environment variables
 ```shell
