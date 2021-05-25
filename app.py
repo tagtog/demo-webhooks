@@ -3,7 +3,6 @@ import json
 import spacy
 import requests
 import os
-import sys
 from bs4 import BeautifulSoup
 
 # -----------------------------------------------------------------------------
@@ -12,19 +11,46 @@ from bs4 import BeautifulSoup
 MY_USERNAME = os.environ['MY_TAGTOG_USERNAME']
 MY_PASSWORD = os.environ['MY_TAGTOG_PASSWORD']
 MY_PROJECT = os.environ['MY_TAGTOG_PROJECT']
+# the project owner could be a different user, but for simplicity we assume it's the same as your username
+MY_PROJECT_OWNER = MY_USERNAME
+
+TAGTOG_DOMAIN = os.environ.get('TAGTOG_DOMAIN', "https://tagtog.net")
 
 # -----------------------------------------------------------------------------
 
 # API authentication
-tagtog_API_endpoint = "https://www.tagtog.net/-api/documents/v1"
 auth = requests.auth.HTTPBasicAuth(username=MY_USERNAME, password=MY_PASSWORD)
+
+tagtog_docs_API_endpoint = f"{TAGTOG_DOMAIN}/-api/documents/v1"
+tagtog_sets_API_endpoint = f"{TAGTOG_DOMAIN}/-api/settings/v1"
+
+default_API_params = {'owner': MY_PROJECT_OWNER, 'project': MY_PROJECT}
 
 # Parameters for the GET API call to get a document
 # (see https://docs.tagtog.net/API_documents_v1.html#examples-get-the-original-document-by-document-id)
-get_params_doc = {'owner': MY_USERNAME, 'project': MY_PROJECT, 'output': 'plain.html'}
+get_params_doc = {**default_API_params, **{'output': 'plain.html'}}
 # Parameters for the POST API call to import a pre-annotated document
-# (see https://docs.tagtog.net/API_documents_v1.html#examples-import-pre-annotated-plain-text-file)
-post_params_doc = {'owner': MY_USERNAME, 'project': MY_PROJECT, 'output': 'null', 'format': 'anndoc'}
+# (see https://docs.tagtog.net/API_documents_v1.html#import-annotated-documents-post)
+post_params_doc = {**default_API_params, **{'output': 'null', 'format': 'anndoc'}}
+
+# -----------------------------------------------------------------------------
+
+# See: https://docs.tagtog.net/API_settings_v1.html#annotations-legend
+def get_tagtog_anntasks_json_map():
+  res = requests.get(f"{tagtog_sets_API_endpoint}/annotationsLegend", params=default_API_params, auth=auth)
+  assert res.status_code == 200, f"Couldn't connect to the given tagtog project with the given credentials (http status code {res.status_code}; body: {res.text})"
+  return res.json()
+
+# In the example of https://github.com/tagtog/demo-webhooks, we could hardcode this like:
+# map_ids_to_names = {'e_1': 'PERSON', 'e_2': 'ORG', 'e_3': 'MONEY'}
+# However, tagtog provides a useful API to generalize the mapping:
+map_ids_to_names = get_tagtog_anntasks_json_map()
+# we just invert the dictionary
+map_names_to_ids = {name: class_id for class_id, name in map_ids_to_names.items()}
+
+def get_class_id(label):
+  """Translates the spaCy label id into the tagtog entity type id"""
+  return map_names_to_ids.get(label, None)
 
 # -----------------------------------------------------------------------------
 
@@ -32,16 +58,12 @@ post_params_doc = {'owner': MY_USERNAME, 'project': MY_PROJECT, 'output': 'null'
 pipeline = 'en_core_web_sm'
 nlp = spacy.load(pipeline)
 
+# -----------------------------------------------------------------------------
+
 app = Flask(__name__)
 # Handle any POST request coming to the app root path
 
 # -----------------------------------------------------------------------------
-
-def get_class_id(label):
-  """Translates the spaCy label id into the tagtog entity type id"""
-  choices = {'PERSON': 'e_1', 'ORG': 'e_2', 'MONEY': 'e_3'}
-  return choices.get(label, None)
-
 
 def get_entities(spans, pipeline, partId):
   """
@@ -105,7 +127,7 @@ def respond():
     # Add the doc ID to the parameters
     get_params_doc['ids'] = docid
 
-    get_response = requests.get(tagtog_API_endpoint, params=get_params_doc, auth=auth)
+    get_response = requests.get(tagtog_docs_API_endpoint, params=get_params_doc, auth=auth)
     doc_plain_html = get_response.content
 
     # Initialize ann.json (specification: https://docs.tagtog.net/anndoc.html#ann-json)
@@ -130,7 +152,7 @@ def respond():
     # Pre-annotated document composed of the content and the annotations
     files = [(docid + '.plain.html', doc_plain_html), (docid + '.ann.json', json.dumps(annjson))]
 
-    post_response = requests.post(tagtog_API_endpoint, params=post_params_doc, auth=auth, files=files)
+    post_response = requests.post(tagtog_docs_API_endpoint, params=post_params_doc, auth=auth, files=files)
     print(post_response.text)
 
   return Response()
