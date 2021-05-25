@@ -10,7 +10,7 @@ With this repo, you will learn how to setup a tagtog webhook and how to manage a
 2. To annotate the document text using the spaCy model [`en_core_web_sm`](https://spacy.io/models/en#en_core_web_sm) and to transform the spaCy annotations into the [ann.json](https://docs.tagtog.net/anndoc.html#ann-json) format.
 3. To push the annotated document back to tagtog
 
-## Setup and running
+## ⚡️ Setup and running
 
 1. Create a virtual environment
 ```shell
