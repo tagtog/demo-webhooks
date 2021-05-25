@@ -43,7 +43,7 @@ def get_tagtog_anntasks_json_map():
 
 # In the example of https://github.com/tagtog/demo-webhooks, we could hardcode this like:
 # map_ids_to_names = {'e_1': 'PERSON', 'e_2': 'ORG', 'e_3': 'MONEY'}
-# However, tagtog provides a useful API to generalize the mapping:
+# However, we use tagtog's useful API to generalize the mapping:
 map_ids_to_names = get_tagtog_anntasks_json_map()
 # we just invert the dictionary
 map_names_to_ids = {name: class_id for class_id, name in map_ids_to_names.items()}
