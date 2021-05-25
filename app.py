@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 
 # -----------------------------------------------------------------------------
 
-# Set your credentials at tagtog
+# Set your tagtog credentials & project info
 MY_USERNAME = os.environ['MY_TAGTOG_USERNAME']
 MY_PASSWORD = os.environ['MY_TAGTOG_PASSWORD']
 MY_PROJECT = os.environ['MY_TAGTOG_PROJECT']
@@ -53,6 +53,7 @@ def get_entities(spans, pipeline, partId):
   default_part_id = partId
   default_state = 'pre-added'
   tagtog_entities = []
+
   for span in spans:
     class_id = get_class_id(span.label_)
     if class_id is not None:
@@ -68,6 +69,7 @@ def get_entities(spans, pipeline, partId):
           'fields': {},
           # this is related to the kb_id (knowledge base ID) field from the Span spaCy object
           'normalizations': {}})
+
   return tagtog_entities
 
 
