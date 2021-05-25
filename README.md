@@ -58,6 +58,7 @@ ngrok http 5005
     1. `PERSON`
     2. `ORG`
     3. `MONEY`
+    4. (OPTIONALLY) you can add more, as many (and with the exact names) as supported and listed in [en_core_web_sm > "Label Scheme" > NER](https://spacy.io/models/en#en_core_web_sm-labels) (e.g. `DATE` or `LANGUAGE`).
 
 9. Add a webhook to your project at Settings > Webhooks:
     * Endpoint: Use the endpoint given by ngrok (e.g. https://d6a6da136156.ngrok.io)
