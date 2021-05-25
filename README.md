@@ -34,31 +34,31 @@ python3 -m spacy download en_core_web_sm
 
 4. Create a project at [tagtog.net](https://www.tagtog.net)
 
-5. Setup the environment variables
+5. Go to your tagtog project and create three entity types at Settings > Entity Types:
+    1. `PERSON`
+    2. `ORG`
+    3. `MONEY`
+    4. (OPTIONALLY) you can add more, as many (and with the exact names) as supported and listed in [en_core_web_sm > "Label Scheme" > NER](https://spacy.io/models/en#en_core_web_sm-labels) (e.g. `DATE` or `LANGUAGE`).
+
+6. Setup the environment variables
 ```shell
 export MY_TAGTOG_USERNAME='your_username'
 export MY_TAGTOG_PASSWORD='your_password'
 export MY_TAGTOG_PROJECT='project_name'
 ```
 
-6. Run the app
+7. Run the app
 ```shell
 export FLASK_APP=app.py
 export FLASK_ENV=development  # this enables live reloading
 flask run --port 5005
 ```
 
-7. In another console, make your app reachable from the outside using [ngrok](https://ngrok.com/)
+8. In another console, make your app reachable from the outside using [ngrok](https://ngrok.com/)
 ```shell
 # on macOS: brew install ngrok
 ngrok http 5005
 ```
-
-8. Go to your tagtog project and create three entity types at Settings > Entity Types:
-    1. `PERSON`
-    2. `ORG`
-    3. `MONEY`
-    4. (OPTIONALLY) you can add more, as many (and with the exact names) as supported and listed in [en_core_web_sm > "Label Scheme" > NER](https://spacy.io/models/en#en_core_web_sm-labels) (e.g. `DATE` or `LANGUAGE`).
 
 9. Add a webhook to your project at Settings > Webhooks:
     * Endpoint: Use the endpoint given by ngrok (e.g. https://d6a6da136156.ngrok.io)
