@@ -68,5 +68,7 @@ ngrok http 5005
 
 10. Upload a document to your tagtog project 🪄 it will be automatically annotated by our spaCy model!
 
-    Example document text:
+    Sample document text:
     > Paypal Holdings Inc (PYPL) President and CEO Daniel Schulman Sold $2.7 million of Shares.
+
+    [Sample PDF](https://s2.q4cdn.com/470004039/files/doc_financials/2021/q1/FY21-Q1-Consolidated-Financial-Statements.pdf)
