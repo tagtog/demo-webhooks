@@ -14,7 +14,10 @@ MY_PROJECT = os.environ['MY_TAGTOG_PROJECT']
 # the project owner could be a different user, but for simplicity we assume it's the same as your username
 MY_PROJECT_OWNER = MY_USERNAME
 
-TAGTOG_DOMAIN = os.environ.get('TAGTOG_DOMAIN', "https://tagtog.net")
+TAGTOG_DOMAIN_CLOUD = "https://tagtog.net"
+TAGTOG_DOMAIN = os.environ.get('TAGTOG_DOMAIN', TAGTOG_DOMAIN_CLOUD)
+# When this is false, the SSL certification will not be verified (this is useful, for instance, for self-signed localhost tagtog instances)
+VERIFY_SSL_CERT = TAGTOG_DOMAIN == TAGTOG_DOMAIN_CLOUD
 
 # -----------------------------------------------------------------------------
 
@@ -37,7 +40,7 @@ post_params_doc = {**default_API_params, **{'output': 'null', 'format': 'anndoc'
 
 # See: https://docs.tagtog.net/API_settings_v1.html#annotations-legend
 def get_tagtog_anntasks_json_map():
-  res = requests.get(f"{tagtog_sets_API_endpoint}/annotationsLegend", params=default_API_params, auth=auth)
+  res = requests.get(f"{tagtog_sets_API_endpoint}/annotationsLegend", params=default_API_params, auth=auth, verify=VERIFY_SSL_CERT)
   assert res.status_code == 200, f"Couldn't connect to the given tagtog project with the given credentials (http status code {res.status_code}; body: {res.text})"
   return res.json()
 
@@ -127,7 +130,7 @@ def respond():
     # Add the doc ID to the parameters
     get_params_doc['ids'] = docid
 
-    get_response = requests.get(tagtog_docs_API_endpoint, params=get_params_doc, auth=auth)
+    get_response = requests.get(tagtog_docs_API_endpoint, params=get_params_doc, auth=auth, verify=VERIFY_SSL_CERT)
     doc_plain_html = get_response.content
 
     # Initialize ann.json (specification: https://docs.tagtog.net/anndoc.html#ann-json)
@@ -152,7 +155,7 @@ def respond():
     # Pre-annotated document composed of the content and the annotations
     files = [(docid + '.plain.html', doc_plain_html), (docid + '.ann.json', json.dumps(annjson))]
 
-    post_response = requests.post(tagtog_docs_API_endpoint, params=post_params_doc, auth=auth, files=files)
+    post_response = requests.post(tagtog_docs_API_endpoint, params=post_params_doc, auth=auth, files=files, verify=VERIFY_SSL_CERT)
     print(post_response.text)
 
   return Response()
